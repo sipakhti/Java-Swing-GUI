@@ -11,13 +11,14 @@ public abstract class ArithmeticalOperations {
      */
     private static String input;
 
-    public static void setInput(String input) {
+    // Input Field setter
+    private static void setInput(String input) {
         ArithmeticalOperations.input = input;
     }
 
+    // Primary static method which is accessible to user and accepts the arithmetic String and returns the solved string
     public static String ArthOp(String s) {
         setInput(s);
-        int divideCount = 0, multiplyCount = 0, addCount = 0, subtractCount = 0;
 
         isDivide();
         isMultiply();
@@ -29,6 +30,7 @@ public abstract class ArithmeticalOperations {
 
 
 
+    // Method to do division operations
     private static void isDivide() {
         char[] arr = input.toCharArray();
         long divide = 0;
@@ -38,18 +40,20 @@ public abstract class ArithmeticalOperations {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == '/') {
 
-                num1 = extractNum1(i);
+// IF X / Y then:
+                num1 = extractNum1(i); // extracts X
 
+                num2 = extractNum2(i); // extracts Y
 
-                num2 = extractNum2(i);
-                sub = num1 + "/" + num2;
-                divide = Long.parseLong(num1)/Long.parseLong(num2);
-                input = input.replace(sub,Long.toString(divide));
+                sub = num1 + "/" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
+                divide = Long.parseLong(num1)/Long.parseLong(num2); // the actual Arithmetic operation
+                input = input.replace(sub,Long.toString(divide)); // replaces the substring which was solved with the answer
                 break;
             }
         }
     }
 
+    // Method to do multiplication operations
     private static void isMultiply() {
         char[] arr = input.toCharArray();
         String num1, num2, sub;
@@ -59,20 +63,21 @@ public abstract class ArithmeticalOperations {
 
             if (arr[i] == '*') {
 
+// IF X * Y then:
+                num1 = extractNum1(i); // extracts X
 
-                num1 = extractNum1(i);
+                num2 = extractNum2(i); // extracts Y
 
-                num2 = extractNum2(i);
-                product = Integer.parseInt(num1) * Integer.parseInt(num2);
-                sub = num1 + "*" + num2;
-                input = input.replace(sub, Long.toString(product));
+                sub = num1 + "*" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
+                product = Integer.parseInt(num1) * Integer.parseInt(num2); // the actual Arithmetic operation
+                input = input.replace(sub, Long.toString(product)); // replaces the substring which was solved with the answer
                 break;
                 }
             }
         }
 
 
-
+    // Method to do Addition operations
     private static void isAdd() {
         char[] arr = input.toCharArray();
         String num1, num2, sub;
@@ -80,19 +85,21 @@ public abstract class ArithmeticalOperations {
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == '+') {
+// IF X + Y then:
+                num1 = extractNum1(i); // extracts X
 
-                num1 = extractNum1(i);
+                num2 = extractNum2(i); // extracts Y
 
-                num2 = extractNum2(i);
-                sub = num1 + "+" + num2;
-                sum = Long.parseLong(num1) + Long.parseLong(num2);
-                input = input.replace(sub,Long.toString(sum));
+                sub = num1 + "+" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
+                sum = Long.parseLong(num1) + Long.parseLong(num2); // the actual Arithmetic operation
+                input = input.replace(sub,Long.toString(sum)); // replaces the substring which was solved with the answer
                 break;
 
             }
         }
     }
 
+    // Method to do Subtraction Operations
     private static void isSubtract() {
         char[] arr = input.toCharArray();
         String num1, num2, sub;
@@ -100,19 +107,21 @@ public abstract class ArithmeticalOperations {
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == '-') {
+// IF X - Y then:
+                num1 = extractNum1(i); // extracts X
 
-                num1 = extractNum1(i);
+                num2 = extractNum2(i); // extracts Y
 
-                num2 = extractNum2(i);
-
-                sub = num1 + "-" + num2;
-                sum = Long.parseLong(num1) - Long.parseLong(num2);
-                input = input.replace(sub,Long.toString(sum));
+                sub = num1 + "-" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
+                sum = Long.parseLong(num1) - Long.parseLong(num2);// the actual Arithmetic operation
+                input = input.replace(sub,Long.toString(sum)); // replaces the substring which was solved with the answer
                 break;
             }
         }
     }
 
+
+// Support methods for Arithmetic to extract the two numbers to be operated upon
     private static String extractNum1(int i) {
         char[] arr = input.toCharArray();
         int j = i;
