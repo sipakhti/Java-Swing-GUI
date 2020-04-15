@@ -1,6 +1,7 @@
 package Experimentatoins;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,18 +30,31 @@ public class Calculator extends JFrame {
     private JButton DIVIDEButton;
     private JButton MULTIPLYButton;
     private JTextField outputField;
+    private JButton sciButton;
+    private JPanel science;
+    private JButton button1;
+    private JButton button2;
+    private JComboBox modeSelector;
     private String input = "";
     private String equation = "";
     private String output = "";
+    private ScientificCalculator Sci;
 
 
     public Calculator(String title){
         super(title);
+        outputField.setEditable(false);
+        Sci = new ScientificCalculator();
+        add(Sci);
+
+        science.setVisible(false);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
 
+        modeSelector.addItem("Normal");
+        modeSelector.addItem("Scientific");
         pressButtons();
         getKey();
 
@@ -70,6 +84,8 @@ public class Calculator extends JFrame {
 
         pressCalculate();
         reset();
+        pressSci();
+
     }
 
     private void reset(){
@@ -122,6 +138,24 @@ public class Calculator extends JFrame {
                 input = "";
                 inputField.setText("");
 
+            }
+        });
+    }
+
+    private void pressSci() {
+
+        modeSelector.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox option =(JComboBox) e.getSource();
+                if (option.getSelectedItem() == "Normal") {
+                    setSize(250, 250);
+                    science.setVisible(false);
+                }
+                else {
+                    setSize(500, 250);
+                    science.setVisible(true);
+                }
             }
         });
     }

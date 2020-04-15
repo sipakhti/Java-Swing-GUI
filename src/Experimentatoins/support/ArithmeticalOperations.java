@@ -20,6 +20,7 @@ public abstract class ArithmeticalOperations {
     public static String ArthOp(String s) {
         setInput(s);
 
+        Exponent();
         isDivide();
         isMultiply();
         isAdd();
@@ -114,6 +115,26 @@ public abstract class ArithmeticalOperations {
 
                 sub = num1 + "-" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
                 sum = Long.parseLong(num1) - Long.parseLong(num2);// the actual Arithmetic operation
+                input = input.replace(sub,Long.toString(sum)); // replaces the substring which was solved with the answer
+                break;
+            }
+        }
+    }
+
+    private static void Exponent(){
+        char[] arr = input.toCharArray();
+        String num1, num2, sub;
+        long sum = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == '^') {
+// IF X - Y then:
+                num1 = extractNum1(i); // extracts X
+
+                num2 = extractNum2(i); // extracts Y
+
+                sub = num1 + "^" + num2; // Concatenate num1 and num2 to create a matching string to be used a source in string.replace() method
+                sum = (long) Math.pow(Long.parseLong(num1),Long.parseLong(num2));// the actual Arithmetic operation
                 input = input.replace(sub,Long.toString(sum)); // replaces the substring which was solved with the answer
                 break;
             }

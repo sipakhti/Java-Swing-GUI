@@ -8,7 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class InOutFields extends JPanel
-                        implements Updateable{
+                        implements Updateable,
+                                    getAble{
 
     private TextField inputField, outputField;
     private String input ="";
@@ -23,7 +24,6 @@ public class InOutFields extends JPanel
         add(inputField);
         add(outputField);
 
-        getKey();
 
         outputField.setEditable(false);
         //inputField.requestFocusInWindow();
@@ -52,28 +52,12 @@ public class InOutFields extends JPanel
         input = "";
     }
 
+    public String getInput() {
+        return input;
+    }
 
-    private void getKey() {
-        this.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                char key = e.getKeyChar();
-                if (e.getKeyCode() == KeyEvent.VK_ENTER){
-                    inputField.setText("");
-                }
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
-
+    @Override
+    public String toString() {
+        return inputField.getText();
     }
 }
