@@ -12,7 +12,4 @@ public class ScientificCalculator extends JPanel {
 
     }
 
-    public void toggleVisiblity(){
-        setVisible(!isVisible());
-    }
 }

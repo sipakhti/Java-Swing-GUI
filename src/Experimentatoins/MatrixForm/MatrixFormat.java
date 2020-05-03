@@ -7,6 +7,11 @@ import java.awt.event.ActionListener;
 
 public class MatrixFormat extends JPanel {
 
+    /*
+    Buttons for updating matrix rows and columns
+    can be used with any class which implements Incrementable Interface
+     */
+
     private JButton addCol, addRow,removeCol,removeRow;
     private Incrementable fields;
 

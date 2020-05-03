@@ -17,7 +17,10 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <text value=""/>
+          <toolTipText value="123456789"/>
+        </properties>
       </component>
       <component id="8adf4" class="javax.swing.JButton" binding="a7Button" default-binding="true">
         <constraints>

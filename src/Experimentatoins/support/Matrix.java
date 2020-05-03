@@ -1,16 +1,10 @@
 package Experimentatoins.support;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 public abstract class Matrix {
 
 
-    public static int[][] addMatrix(int[][] matrixA, int[][] matrixB) {
-        int[][] matrixSum = new int[matrixA.length][matrixA[0].length];
+    public static long[][] addMatrix(int[][] matrixA, int[][] matrixB) {
+        long[][] matrixSum = new long[matrixA.length][matrixA[0].length];
         boolean canAdd = matrixA.length == matrixB.length && matrixA[0].length == matrixB[0].length;
         if (canAdd) {
             for (int row = 0;row < matrixA.length;row++) {

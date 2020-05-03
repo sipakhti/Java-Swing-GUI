@@ -1,10 +1,6 @@
 package Swing1;
 
-import Experimentatoins.Refactored.Calculator.MainFrame;
-import Experimentatoins.support.ArithmeticalOperations;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import Experimentatoins.MatrixForm.MainPanel;
 
 public class App {
 
@@ -17,8 +13,13 @@ public class App {
 //            }
 //        });
 
-        var frame = new MainFrame("TEST");
+//        var frame = new MainFrame("TEST");
+
+          var frame = new MainPanel("Matrix");
+
 
     }
+
+
 
 }

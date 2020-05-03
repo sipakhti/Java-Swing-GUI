@@ -29,7 +29,7 @@ public class InField extends JPanel implements Incrementable {
         this.c.weightx = 0.5;
     }
 
-    private void setMatrix(final int row, final int column) {
+    public void setMatrix(final int row, final int column) {
         this.removeAll();
         setMatrix(new JTextField[row][column]);
         for (int r = 0; r < row; r++) {
