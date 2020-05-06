@@ -44,6 +44,7 @@ public class test {
         System.out.println("Students       Teachers");
 
 
+
         try {
 
             while (resultSet.next()) {

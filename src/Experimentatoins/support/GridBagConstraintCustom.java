@@ -11,5 +11,6 @@ public class GridBagConstraintCustom extends GridBagConstraints {
         weighty = 0;
         ipadx = 0;
         ipady  = 0;
+        insets = new Insets(0,0,0,0);
     }
 }
