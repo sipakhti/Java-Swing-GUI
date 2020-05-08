@@ -3,54 +3,69 @@ package MySQL;
 import javax.swing.*;
 import java.awt.*;
 
-public class Table extends JPanel {
-    private final GridLayout LAYOUT = new GridLayout(1,1);
+public class Table extends JPanel{
+    /*
+    Main table class that holds TableRow class as rows
+
+    couples with the controller class to update the rows
+     */
+    private final GridBagLayout LAYOUT = new GridBagLayout();
     private GridBagConstraints constraints;
+
+    private ActionPerformed listener;
 
 
     public Table(){
         setBackground(Color.black);
-        constraints = new GridBagConstraints();
+
+
         setLayout(LAYOUT);
 
-        constraints.gridy = 0;
-        constraints.gridx = 0;
-        constraints.gridwidth = 6;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.anchor = GridBagConstraints.WEST;
-        add(new TableRow());
 
+        constraintParams();
 
     }
 
+    private void constraintParams() {
+        constraints = new GridBagConstraints();
+        constraints.gridy = 0;
+        constraints.gridx = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH;
+    }
+
+
     public void updateRow(String[] data){
-        Component[] components =  getComponents();
-        boolean hasSpace = false;
+        /*
+        accepts Array of String data and passes it to corresponding row to update fields
+         */
 
-        for (Component component : components) {
-            TableRow row = (TableRow) component;
-            if (row.isEmpty()) {
-                hasSpace = true;
-                break;
-            }
-        }
+        constraints.gridy = getComponentCount();
+        add(new TableRow(), constraints);
+        TableRow row = (TableRow) getComponent(getComponentCount()-1);
+        row.updateRow(data);
 
-        if (hasSpace){
+        System.out.println(getComponentCount());
+
+    }
+
+    public void updateRow(String[][] Data){
+        /*
+        accepts 2D Array of String data and passes it to corresponding row to update fields
+         */
+
+        for (String[] datum : Data) {
             constraints.gridy = getComponentCount();
-            LAYOUT.setRows(LAYOUT.getRows()+1);
-            add(new TableRow());
+            add(new TableRow(), constraints);
+            TableRow row = (TableRow) getComponent(getComponentCount()-1);
+            row.updateRow(datum);
+
+            System.out.println(getComponentCount());
         }
 
-        for (Component component : components) {
-            TableRow row = (TableRow) component;
-            if (row.isEmpty()) {
-                row.updateRow(data);
-                break;
-            }
-            else continue;
-        }
+
     }
 
 }
