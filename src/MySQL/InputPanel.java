@@ -4,10 +4,7 @@ import Swing1.StringListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class InputPanel extends JPanel{
     private final GridBagLayout LAYOUT = new GridBagLayout();
@@ -45,6 +42,18 @@ public class InputPanel extends JPanel{
         AddItemListener();
 
         productNameKeyListener();
+
+        addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                productName.requestFocus();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
 
         setVisible(true);
     }

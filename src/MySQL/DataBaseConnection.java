@@ -15,9 +15,10 @@ public class DataBaseConnection {
     public void connectDatabase() throws SQLException {
 
         try {
-            username = "dbuser";
+            username = "sa";
             password = "cherry476";
             connection = DriverManager.getConnection(connURL,username,password);
+            connection.setCatalog("POS_Data");
             if (connection != null)
                 System.out.println(connection);
         } catch (SQLException e) {
@@ -32,28 +33,13 @@ public class DataBaseConnection {
             e.printStackTrace();
         }
 
-        String query = "SELECT first_name, last_name, id, email" +
-                " " +
-                "FROM students ";
-        System.out.println(query);
-
-        try {
-            resultSet = statement.executeQuery(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    public String[] rowData() throws SQLException {
-        String[] strArr = new String[4];
-        resultSet.next();
-        System.out.println(resultSet.getRow());
-        for (int i = 1; i < 5; i++) {
-            strArr[i-1] = resultSet.getString(i);
-        }
+    public String rowData() throws SQLException {
 
-        return strArr;
+        resultSet.next();
+
+        return resultSet.getString(1) + "!!!" + resultSet.getString(2);
     }
 
     public void close() throws SQLException {
@@ -72,28 +58,55 @@ public class DataBaseConnection {
 
     public void searchQuery(String str) throws SQLException {
         // runs a search query and saves the output in resultSet
-        String query = "SELECT first_name, last_name, id, email" +
+        String query = "SELECT product_name, price" +
                 " " +
-                "FROM students " +
-                "WHERE first_name LIKE '%" + str + "%'";
+                "FROM Product_Table " +
+                "WHERE product_name LIKE '%" + str + "%'";
         System.out.println(query);
         resultSet = statement.executeQuery(query);
 
     }
 
-    public String[][] completeData() throws SQLException {
-        // returns the complete resultSet rows data in a 2D String Array
-        resultSet.last();
-        int rowCount = resultSet.getRow();
-        System.out.println(rowCount);
-        resultSet.beforeFirst();
-        String[][] Data = new String[rowCount][4];
+//    public String[][] completeData() throws SQLException {
+//        // returns the complete resultSet rows data in a 2D String Array
+//        resultSet.last();
+//        int rowCount = resultSet.getRow();
+//        System.out.println(rowCount);
+//        resultSet.beforeFirst();
+//        String[][] Data = new String[rowCount][4];
+//
+//        for (int i = 0; i < rowCount; i++) {
+//            Data[i] = rowData();
+//        }
+//
+//        return Data;
+//
+//    }
 
-        for (int i = 0; i < rowCount; i++) {
-            Data[i] = rowData();
-        }
+    public void addTransaction() throws SQLException {
+        String update = "INSERT INTO Transactions VALUES (GETDATE())";
+        statement.executeQuery(update);
+    }
 
-        return Data;
+    public long getTransactionID() throws SQLException{
+        String query = "SELECT MAX(transaction_ID) FROM Transactions";
+        ResultSet transactionid = statement.executeQuery(query);
+        transactionid.next();
 
+        return Long.parseLong(transactionid.getString(1));
+    }
+
+    public String getBarcode(String productName) throws SQLException {
+        String query = String.format("SELECT barcode FROM Product_Table WHERE product_name = '%s'",productName);
+        ResultSet barcodeSet = statement.executeQuery(query);
+        barcodeSet.next();
+        return barcodeSet.getString(1);
+    }
+
+    public void addTransactionDetails(long transaction_id, String barcode, int quantity) throws SQLException {
+        String query = String.format("INSERT INTO Transaction_Details VALUES " +
+                "(%d,'%s',%d",transaction_id,barcode,quantity);
+
+        statement.executeQuery(query);
     }
 }

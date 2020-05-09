@@ -77,6 +77,7 @@ public class TableRow extends JPanel {
         row[1].setEditable(false);
         row[1].setOpaque(false);
         row[1].setForeground(Color.BLACK);
+        row[1].setHorizontalAlignment(SwingConstants.RIGHT);
     }
 
     private void Quantity() {
@@ -88,6 +89,7 @@ public class TableRow extends JPanel {
         row[2].setMinimumSize(row[2].getPreferredSize());
         row[2].setEnabled(true);
         row[2].setOpaque(false);
+        row[2].setHorizontalAlignment(SwingConstants.RIGHT);
         quantityEditor();
     }
 
@@ -99,6 +101,7 @@ public class TableRow extends JPanel {
         row[3].setMinimumSize(row[3].getPreferredSize());
         row[3].setEditable(false);
         row[3].setOpaque(false);
+        row[3].setHorizontalAlignment(SwingConstants.RIGHT);
     }
 
     private void quantityEditor() {
@@ -120,9 +123,8 @@ public class TableRow extends JPanel {
 
                     @Override
                     public void keyReleased(KeyEvent e) {
-                        JTextField textField = (JTextField) e.getSource();
                         if (e.getKeyCode() == KeyEvent.VK_ENTER){
-                            row[3].setText(Integer.toString(Integer.parseInt(textField.getText()) * 10));
+                            row[3].setText(Float.toString(Float.parseFloat(row[1].getText()) * Integer.parseInt(row[2].getText())));
                         }
 
                     }
@@ -132,14 +134,28 @@ public class TableRow extends JPanel {
     }
 
 
-    public void updateRow(String[] data){
-        for (int i = 0; i < COLUMNS; i++) {
-            row[i].setText(data[i]);
-        }
+    public void updateRow(String data){
+        row[0].setText(data.split("!!!")[0]);
+        row[1].setText(data.split("!!!")[1]);
+        row[2].setText("1");
+        row[3].setText(Float.toString(Float.parseFloat(row[1].getText()) * Integer.parseInt(row[2].getText())));
     }
 
     public boolean isEmpty(){
         if (row[0].getText().isEmpty()) return true;
         else return false;
+    }
+
+    public String getProductName(){
+        return row[0].getText();
+    }
+
+    public void incrementQuantiy(){
+        row[2].setText(Integer.toString(Integer.parseInt(row[2].getText()) + 1));
+        row[3].setText(Float.toString(Float.parseFloat(row[1].getText()) * Integer.parseInt(row[2].getText())));
+    }
+
+    public float subtotal(){
+        return Float.parseFloat(row[3].getText());
     }
 }

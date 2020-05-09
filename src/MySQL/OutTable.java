@@ -21,6 +21,7 @@ public class OutTable extends JFrame {
 
 
     private Table table = new Table();
+    private  GrandTotal grandTotal;
 
     public OutTable() {
         super("test");
@@ -37,6 +38,7 @@ public class OutTable extends JFrame {
         productTable.setMatrix(1,4);
         constraints = new GridBagConstraintCustom();
         columnNames = new ColumnNames();
+        grandTotal = new GrandTotal();
         setLayout(new GridBagLayout());
 
         addInputPanel();
@@ -45,11 +47,25 @@ public class OutTable extends JFrame {
 
         addProductTable();
 
+        addGrandTotal();
+
         inputPanelListeners();
 
         tableKeyListener();
 
         mainPanelProperties();
+    }
+
+    private void addGrandTotal() {
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        constraints.gridwidth = 6;
+        constraints.weightx = 0;
+        constraints.insets = new Insets(5,5,5,5);
+        constraints.ipadx = 1;
+        add(grandTotal,constraints);
+        constraints.reset();
+        grandTotal.setVisible(false);
     }
 
     private void addcolumnLabels() {
@@ -73,6 +89,7 @@ public class OutTable extends JFrame {
                 try {
                     table.updateRow(dbconn.rowData());
                     table.requestFocus();
+                    grandTotal.setVisible(true);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -85,9 +102,12 @@ public class OutTable extends JFrame {
             @Override
             public void textEmitted(String text) {
                 try {
-                    table.removeAll();
+//                    table.removeAll();
                     dbconn.searchQuery(text);
-                    table.updateRow(dbconn.completeData());
+                    table.updateRow(dbconn.rowData());
+                    grandTotal.setTotal(table.getTotal());
+                    table.requestFocus();
+                    grandTotal.setVisible(true);
                     pack();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -109,16 +129,20 @@ public class OutTable extends JFrame {
                 if (e.getKeyCode() == KeyEvent.VK_DELETE){
 
                         table.remove(table.getComponentCount() - 1);
+                        setSize();
                         try {
                             dbconn.previousRow();
                         } catch (SQLException ex) {
-                            ex.printStackTrace();
+                            grandTotal.setVisible(false);
                         }
                         revalidate();
                         repaint();
                         pack();
 
                 }
+
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL)
+                    inputPanel.requestFocus();
 
 
             }
@@ -207,5 +231,24 @@ public class OutTable extends JFrame {
 
     public static void main(String[] args) {
         var out = new OutTable();
+    }
+
+    private void setSize(){
+        int totalHeight = inputPanel.getHeight() + table.getHeight() + grandTotal.getHeight();
+        int totalWidth = table.getWidth();
+//        Dimension dimension = new Dimension(totalWidth,totalHeight);
+//        setMinimumSize(dimension);
+//        setPreferredSize(dimension);
+    }
+
+    private void tablePurge(){
+        table.removeAll();
+        revalidate();
+        repaint();
+        pack();
+    }
+
+    private void tableSave(){
+
     }
 }

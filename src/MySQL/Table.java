@@ -37,35 +37,59 @@ public class Table extends JPanel{
     }
 
 
-    public void updateRow(String[] data){
+    public void updateRow(String data){
         /*
         accepts Array of String data and passes it to corresponding row to update fields
          */
+        boolean updated = false;
+        try {
+            Component[] components = getComponents();
+            for (Component component : components) {
+                TableRow previousRow = (TableRow) component;
+                if (previousRow.getProductName().equals(data.split("!!!")[0])) {
+                    previousRow.incrementQuantiy();
+                    updated = true;
+                    break;
+                }
+            }
+            if (!updated) throw new IndexOutOfBoundsException();
 
-        constraints.gridy = getComponentCount();
-        add(new TableRow(), constraints);
-        TableRow row = (TableRow) getComponent(getComponentCount()-1);
-        row.updateRow(data);
+        }catch(IndexOutOfBoundsException e) {
+            constraints.gridy = getComponentCount();
+            add(new TableRow(), constraints);
+            TableRow row = (TableRow) getComponent(getComponentCount() - 1);
+            row.updateRow(data);
 
+        }
         System.out.println(getComponentCount());
 
     }
 
-    public void updateRow(String[][] Data){
-        /*
-        accepts 2D Array of String data and passes it to corresponding row to update fields
-         */
-
-        for (String[] datum : Data) {
-            constraints.gridy = getComponentCount();
-            add(new TableRow(), constraints);
-            TableRow row = (TableRow) getComponent(getComponentCount()-1);
-            row.updateRow(datum);
-
-            System.out.println(getComponentCount());
+    public float getTotal(){
+        Component[] components = getComponents();
+        float total = 0;
+        for (Component component : components) {
+            TableRow row = (TableRow) component;
+            total += row.subtotal();
         }
-
-
+        return total;
     }
+
+//    public void updateRow(String[][] Data){
+//        /*
+//        accepts 2D Array of String data and passes it to corresponding row to update fields
+//         */
+//
+//        for (String[] datum : Data) {
+//            constraints.gridy = getComponentCount();
+//            add(new TableRow(), constraints);
+//            TableRow row = (TableRow) getComponent(getComponentCount()-1);
+//            row.updateRow(datum);
+//            System.out.println(getComponentCount());
+//        }
+//
+//
+//    }
+
 
 }
