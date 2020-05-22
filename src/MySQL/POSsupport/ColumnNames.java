@@ -1,4 +1,4 @@
-package MySQL;
+package MySQL.POSsupport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +19,9 @@ public class ColumnNames extends JPanel {
         col2 = new JLabel("PRICE");
         col3 = new JLabel("QTY");
         col4 = new JLabel("SUB TOTAL");
+        col2.setHorizontalAlignment(SwingConstants.RIGHT);
+        col3.setHorizontalAlignment(SwingConstants.RIGHT);
+        col4.setHorizontalAlignment(SwingConstants.RIGHT);
         constraints = new GridBagConstraints();
 
         constraints.gridwidth = 3;
@@ -36,14 +39,14 @@ public class ColumnNames extends JPanel {
 
         constraints.gridx = 3;
         constraints.gridwidth = 1;
-        col2.setPreferredSize(new Dimension(144,10));
+        col2.setPreferredSize(new Dimension(150,10));
         col2.setMaximumSize(col2.getPreferredSize());
         col2.setMinimumSize(col2.getPreferredSize());
         col2.setBackground(Color.CYAN);
         add(col2,constraints);
 
         constraints.gridx = 4;
-        col3.setPreferredSize(new Dimension(144,10));
+        col3.setPreferredSize(new Dimension(150,10));
         col3.setMaximumSize(col3.getPreferredSize());
         col3.setMinimumSize(col3.getPreferredSize());
         col3.setBackground(Color.DARK_GRAY);

@@ -42,6 +42,6 @@ public class MatrixFunctions extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       listener.textEmitted(e.getActionCommand());
+       listener.searchQuery(e.getActionCommand());
     }
 }

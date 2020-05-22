@@ -36,8 +36,8 @@ public class ToolBar
     public void actionPerformed(ActionEvent e) {
         var button = e.getSource();
         if (button == helloButton)
-            textListener.textEmitted("Hello\n");
+            textListener.searchQuery("Hello\n");
         else
-            textListener.textEmitted("GoodBye\n");
+            textListener.searchQuery("GoodBye\n");
     }
 }

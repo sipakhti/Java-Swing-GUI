@@ -40,7 +40,7 @@ public class ScientificSection extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton btn = (JButton) e.getSource();
-        listener.textEmitted(btn.getName());
+        listener.searchQuery(btn.getName());
 
     }
 

@@ -2,8 +2,6 @@ package Swing1;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
@@ -28,8 +26,18 @@ public class MainFrame extends JFrame {
 
         toolBar.setTextListener(new StringListener() {
             @Override
-            public void textEmitted(String text) {
+            public void searchQuery(String text) {
                 textPanel.appendText(text);
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
             }
         });
 

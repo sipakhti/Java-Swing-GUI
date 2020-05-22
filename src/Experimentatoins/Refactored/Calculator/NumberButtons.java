@@ -1,11 +1,11 @@
 package Experimentatoins.Refactored.Calculator;
 
-import Experimentatoins.support.ArithmeticalOperations;
 import Swing1.StringListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NumberButtons extends JPanel implements ActionListener {
 
@@ -61,7 +61,7 @@ public class NumberButtons extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton btn = (JButton) e.getSource();
-        textListener.textEmitted(btn.getText());
+        textListener.searchQuery(btn.getText());
     }
 
 

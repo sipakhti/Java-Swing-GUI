@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class MainFrame extends JFrame {
 
@@ -72,9 +70,19 @@ public class MainFrame extends JFrame {
 
         scientificSection.setListener(new StringListener() {
             @Override
-            public void textEmitted(String text) {
+            public void searchQuery(String text) {
                 IOPanel.updateInput(text);
                 equation += text;
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
             }
         });
 
@@ -152,9 +160,19 @@ public class MainFrame extends JFrame {
     private void pressNumbers() {
         numberPanel.setTextlistener(new StringListener() {
             @Override
-            public void textEmitted(String text) {
+            public void searchQuery(String text) {
                 IOPanel.updateInput(text);
                 equation += text;
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
             }
         });
     }
@@ -162,9 +180,19 @@ public class MainFrame extends JFrame {
     private void pressArithmeticButtons() {
         arithematicButttons.setListener(new StringListener() {
             @Override
-            public void textEmitted(String text) {
+            public void searchQuery(String text) {
                 IOPanel.updateInput(text);
                 equation += text;
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
             }
         });
     }

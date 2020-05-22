@@ -1,4 +1,4 @@
-package MySQL;
+package MySQL.POSsupport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +13,7 @@ public class GrandTotal extends JPanel {
     private JLabel totalLabel;
     
     public GrandTotal(){
+        setVisible(true);
         setLayout(LAYOUT);
         constraints = new GridBagConstraints();
         total = new JTextField();
@@ -37,5 +38,9 @@ public class GrandTotal extends JPanel {
 
     public void setTotal(float total) {
         this.total.setText(Float.toString(total));
+    }
+
+    public void incrementTotal(float total){
+        this.total.setText(Float.toString(total + Float.parseFloat(this.total.getText())));
     }
 }

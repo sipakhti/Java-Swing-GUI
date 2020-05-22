@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Flow;
 
 public class ArithematicButttons extends JPanel  implements ActionListener {
     private JButton add, subtract, divide, multpily;
@@ -37,6 +36,6 @@ public class ArithematicButttons extends JPanel  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton btn = (JButton) e.getSource();
-        listener.textEmitted(btn.getText());
+        listener.searchQuery(btn.getText());
     }
 }

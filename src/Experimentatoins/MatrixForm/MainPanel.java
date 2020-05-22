@@ -72,7 +72,7 @@ public class MainPanel extends JFrame {
     private void Calculate() {
         matrixFunctions.setListener(new StringListener() {
             @Override
-            public void textEmitted(String text) {
+            public void searchQuery(String text) {
                 int[][] extractedA , extractedB;
                 switch (text){
                     case "inv":
@@ -105,6 +105,16 @@ public class MainPanel extends JFrame {
                         refresh();
                         break;
                 }
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
             }
         });
     }
