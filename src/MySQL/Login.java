@@ -27,16 +27,6 @@ public class Login extends JFrame {
         popupButton = new JButton("OK");
 
 
-        var factory = PopupFactory.getSharedInstance();
-        Popup popup = factory.getPopup(this,popupButton,0,0);
-
-        popupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                popup.hide();
-            }
-        });
-
 
         userName = new JLabel("USERNAME:");
         userName.setFont(new Font(Font.MONOSPACED,Font.BOLD,12));
@@ -132,6 +122,7 @@ public class Login extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         requestFocus();
+        nameField.requestFocus();
 
 
         Component[] components = getComponents();

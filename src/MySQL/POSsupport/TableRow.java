@@ -7,11 +7,15 @@ import MySQL.Interfaces.Row;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
+/**
+ * the class that holds 4 JtextFields and thus acts as the rows of the Table
+ *
+ * @author sipkahti
+ *
+ * @version 1.0
+ */
 public class TableRow extends JPanel implements Row {
     /*
     A single row class used by table class as row
@@ -29,8 +33,11 @@ public class TableRow extends JPanel implements Row {
 
     private boolean rowEnabled;
 
+    /**
+     * Default constructor that only enables the 3rd Column i.e <i>Quantity</i>
+     */
 
-    public TableRow(){
+    public TableRow() {
         /*
         default constructor that the POSMain class uses as rows
          */
@@ -43,7 +50,7 @@ public class TableRow extends JPanel implements Row {
         setAutoscrolls(true);
 
         // Initialize row with JTextFields
-        for (int i = 0; i <  COLUMNS; i++) {
+        for (int i = 0; i < COLUMNS; i++) {
             row[i] = new JTextField();
             row[i].setBorder(new LineBorder(ColoringConstants.foreground));
         }
@@ -59,9 +66,15 @@ public class TableRow extends JPanel implements Row {
 
         quantityEditor();
 
-
+        addFocus();
     }
 
+
+    /**
+     *
+     * @param rowEnabled true enables every {@link JTextField}
+     *                   false disables all {@link JTextField} except the one responsible for <i>Quantity</i>
+     */
     public TableRow(boolean rowEnabled){
         /*
          * this constructor is used when the all table columns should be editable
@@ -84,6 +97,7 @@ public class TableRow extends JPanel implements Row {
             row[i].setFont(new Font(Font.SANS_SERIF,Font.BOLD,14));
             row[i].setBorder(new LineBorder(ColoringConstants.border));
             row[i].setForeground(ColoringConstants.textFieldsForeground);
+            row[i].setCaretColor(Color.RED);
         }
 
 
@@ -101,18 +115,37 @@ public class TableRow extends JPanel implements Row {
 
         setRowEnabled(rowEnabled);
 
+        row[3].addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_TAB) action.rowUpdated();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        addFocus();
         setBackground(ColoringConstants.textFieldsBackground);
 
     }
 
+    /**
+     * use this constrcutor when you want to use this class as a table header
+     * @param rowEnabled sets every {@link JTextField} to non editable
+     * @param isHeader identifies that this class is to used as a table header and sets header specific settings
+     *
+     */
+
     public TableRow(boolean rowEnabled, boolean isHeader){
-        /**
-         * this Constructor is used when this row is used as a header for the table
-         *
-         * @params rowEnabled -> sets are JtextFields to non editable
-         *         isHeader -> identifies that this class is to used as a table header
-         *         and sets header specific settings
-         */
+
 
         this.rowEnabled = rowEnabled;
         row = new JTextField[COLUMNS];
@@ -149,6 +182,19 @@ public class TableRow extends JPanel implements Row {
         subTotal();
 
         setRowEnabled(rowEnabled);
+    }
+
+    private void addFocus() {
+        addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                row[0].requestFocus();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
     }
 
     private void ProductName() {
@@ -224,7 +270,7 @@ public class TableRow extends JPanel implements Row {
                     public void keyReleased(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_ENTER){
                             row[3].setText(Float.toString(Float.parseFloat(row[1].getText()) * Integer.parseInt(row[2].getText())));
-                            action.actionPerformed();
+                            action.quantityUpdated();
                         }
 
                     }
@@ -234,11 +280,17 @@ public class TableRow extends JPanel implements Row {
     }
 
 
+    /**
+     * updates row data according to the constructor used
+     */
     @Override
     public void updateRow(String data) {
+        System.out.println(data);
         if (rowEnabled) {
             row[0].setText(data.split("!!!")[0]);
             row[1].setText(data.split("!!!")[1]);
+            row[2].setText("1");
+            row[3].setText(data.split("!!!")[2]);
         } else {
             row[0].setText(data.split("!!!")[0]);
             row[1].setText(data.split("!!!")[1]);
@@ -253,32 +305,66 @@ public class TableRow extends JPanel implements Row {
         }
     }
 
+    /**
+     * @return <P>true if the row doesn't have any data
+     *         false is row has some data</p>
+     *         <p>
+     *         <b>NOTE:</b> <i>it only checks the first column</i>
+     *         </p>
+     */
     @Override
     public boolean isEmpty(){
         if (row[0].getText().isEmpty() || row[0].getText().isBlank()) return true;
         else return false;
     }
 
+    /**
+     *
+     * @return the vale of the first column
+     */
     public String getProductName(){
         return row[0].getText();
     }
 
+    /**
+     * increments value in the 3rd column i.e <i>Quantity</i> by <b>1</b>
+     */
     @Override
     public void incrementQuantity(){
+        if (row[2].getText().isEmpty() || row[2].getText().isBlank())
+            row[2].setText("1");
         row[2].setText(Integer.toString(Integer.parseInt(row[2].getText()) + 1));
         row[3].setText(Float.toString(Float.parseFloat(row[1].getText()) * Integer.parseInt(row[2].getText())));
     }
 
+    /**
+     * <p>
+     *     increments value in the 3rd Column i.e <i>Quantity</i>
+     * </p>
+     * @param val the value to be added to the orginal value
+     */
     @Override
     public void incrementQuantity(int val){
+        if (row[2].getText().isEmpty() || row[2].getText().isBlank())
+            row[2].setText("1");
         row[2].setText(Integer.toString(Integer.parseInt(row[2].getText()) + val));
     }
 
+    /**
+     *
+     * @return value in the 4th column i.e <i>Sub-Total</i>
+     */
     @Override
     public float subtotal(){
         return Float.parseFloat(row[3].getText());
     }
 
+    /**
+     * Used to get <b><i>product name</i> and <i>quantity</i></b> respectively
+     *
+     * @return an array of String containing data of the <b>1st</b> and <b>2nd</b>
+     *         Column
+     */
     @Override
     public String[] saveData(){
         String[] data = new String[2];
@@ -288,6 +374,10 @@ public class TableRow extends JPanel implements Row {
         return data;
     }
 
+    /**
+     *
+     * @return an array of string containing data of all the columns
+     */
     @Override
     public String[] updateData(){
         String[] data = new String[COLUMNS];
@@ -297,6 +387,9 @@ public class TableRow extends JPanel implements Row {
         return data;
     }
 
+    /**
+     * clears all the columns. calls {@link JTextField}.<i>setText</i>(<b>""</b>)
+     */
     @Override
     public void reset(){
 
@@ -307,13 +400,35 @@ public class TableRow extends JPanel implements Row {
 
     }
 
+    /**
+     *
+     * @param rowEnabled true: enables all columns
+     *                   false: disables all columns
+     */
     public void setRowEnabled(boolean rowEnabled){
             for (int i = 0; i < row.length; i++) {
                 row[i].setEditable(rowEnabled);
             }
     }
 
+    /**
+     * <p>
+     *     provides other classes to be notified when quantity is updated
+     *      or row is updated
+     * </p>
+     * @param action inject instance of {@link ActionPerformed}
+     */
     public void setListener(ActionPerformed action) {
         this.action = action;
+    }
+
+    /**
+     *
+     * @param color desired foreground color of Columns
+     */
+    public void setallForeground(Color color){
+        for (JTextField textField : row) {
+            textField.setForeground(color);
+        }
     }
 }

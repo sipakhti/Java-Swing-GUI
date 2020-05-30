@@ -1,8 +1,8 @@
 package MySQL.Interfaces;
 
 public interface ActionPerformed {
-    public void actionPerformed();
+    public void quantityUpdated();
 
-    public void actionCommand(String text);
+    public void rowUpdated();
 
 }

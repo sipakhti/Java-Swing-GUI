@@ -1,10 +1,12 @@
 package MySQL;
 
+import MySQL.Interfaces.ActionPerformed;
+import MySQL.Interfaces.AutoCompleter;
 import MySQL.Interfaces.CommitListener;
 import MySQL.POSsupport.ColoringConstants;
+import MySQL.POSsupport.InputPanel;
 import MySQL.POSsupport.Table;
 import MySQL.POSsupport.TableRow;
-import MySQL.POSsupport.UpdatePanel;
 import Swing1.StringListener;
 
 import javax.swing.*;
@@ -22,7 +24,7 @@ public class InventoryUpdate extends JFrame {
 
     private Box box;
     private JScrollPane scrollPane;
-    private UpdatePanel panel;
+    private InputPanel panel;
     private Table table;
     private CommitPanel commit;
     private TableRow header;
@@ -43,39 +45,45 @@ public class InventoryUpdate extends JFrame {
         addCommitButton();
 
 
+        inputPanelListeners();
 
-        panel.setListener(new StringListener() {
+        commitPanelListeners();
+
+        tableListeners();
+
+
+        MainPanelProperties();
+    }
+
+    private void tableListeners() {
+        table.setListener(new ActionPerformed() {
             @Override
-            public void itemSelected(int n) {
+            public void quantityUpdated() {
 
             }
 
             @Override
-            public void searchQuery(String actionCommand) {
-                try {
-                    dataBaseConnection.searchQuery(actionCommand);
-                    table.updateRow(dataBaseConnection.rowData());
-                    table.revalidate();
-                    box.revalidate();
-                    scrollPane.revalidate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void updateItem(String[] rowData) {
-                table.updateRow(rowData);
+            public void rowUpdated() {
+                table.addRow();
+                table.revalidate();
+                box.revalidate();
+                scrollPane.revalidate();
+                table.requestFocus();
+                SwingUtilities.invokeLater(() -> {
+                    JScrollBar scroll = scrollPane.getVerticalScrollBar();
+                    scroll.setValue(scroll.getMaximum());
+                });
+                System.out.println("TEST");
             }
         });
+    }
 
-
+    private void commitPanelListeners() {
         commit.setListener(new CommitListener() {
             @Override
             public void returnListener() {
                 System.out.println("RETURN");
+                panel.reset();
                 commitReturn();
                 table.clear();
             }
@@ -83,13 +91,71 @@ public class InventoryUpdate extends JFrame {
             @Override
             public void updateListener() {
                 System.out.println("UPDATE");
+                panel.reset();
                 commitUpdate();
                 table.clear();
             }
+
+            @Override
+            public void purgeListener(){
+                panel.reset();
+                table.clear();
+            }
+        });
+    }
+
+    private void inputPanelListeners() {
+        panel.setStringListener(new StringListener() {
+            @Override
+            public void searchQuery(String text) {
+                try {
+                    dataBaseConnection.searchQuery(text);
+                    table.updateRow(dataBaseConnection.rowData());
+                    box.revalidate();
+                    box.repaint();
+                    scrollPane.revalidate();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void updateItem(String[] rowData) {
+
+            }
+
+            @Override
+            public void itemSelected(int n) {
+
+            }
         });
 
+        panel.setListener(new ActionPerformed() {
+            @Override
+            public void quantityUpdated() {
+                table.removeRow();
+            }
 
-        MainPanelProperties();
+            @Override
+            public void rowUpdated() {
+
+            }
+        });
+
+        panel.setCompleter(new AutoCompleter() {
+            @Override
+            public void autoCompleteQuery(String subString) {
+                try {
+                    dataBaseConnection.searchQuery(subString);
+                    panel.populateSuggestions(dataBaseConnection.productNames());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     private void MainPanelProperties() {
@@ -146,7 +212,7 @@ public class InventoryUpdate extends JFrame {
 
     private void InitializeFields() throws SQLException {
         dataBaseConnection = new DataBaseConnection("dbadmin","cherry476");
-        panel = new UpdatePanel();
+        panel = new InputPanel();
         panel.setBackground(ColoringConstants.backgroud);
         table = new Table(true);
         commit = new CommitPanel();

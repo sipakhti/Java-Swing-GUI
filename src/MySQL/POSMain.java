@@ -2,6 +2,7 @@ package MySQL;
 
 import Experimentatoins.support.GridBagConstraintCustom;
 import MySQL.Interfaces.ActionPerformed;
+import MySQL.Interfaces.AutoCompleter;
 import MySQL.POSsupport.*;
 import Swing1.StringListener;
 
@@ -11,12 +12,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.SQLException;
 
+/**
+ * The Main Frame for the the application that runs at the POS terminal. it can only read limited tables of the datatbase
+ * and it can modify a few tables and columns.
+ * has access to Product_Table, Transactions, transaction_Details tables
+ * has update access to Inventory, Transactions, transaction_Details tables
+ */
+
 public class POSMain extends JFrame {
 
-    private ProductTable productTable;
     private InputPanel inputPanel;
     private GridBagConstraintCustom constraints;
-    private ColumnNames columnNames;
+    private TableRow columnNames;
     private DataBaseConnection dbconn;
 
 
@@ -26,25 +33,32 @@ public class POSMain extends JFrame {
     private JScrollPane scrollPane;
     private Box box;
 
+    /**
+     * this constructor simply passes the username and password to the database driver and if the credentials are wrong
+     * then it throws an exception.
+     * This has a benefit that credentials, especially passwords are not stored in the program and all the verification is done the Database
+     * itself, and the Program offloads this task to the datatbase.
+     *
+     * @param username username that is used to access the database
+     * @param password password for the username
+     * @throws SQLException when the username OR password are incorrect.
+     */
     public POSMain(String username, String password) throws SQLException {
-        super("test");
-
-
+        super("POS MAIN");
 
 
         dbconn = new DataBaseConnection(username,password);
-
-        inputPanel = new InputPanel("Remove Item");
-        productTable = new ProductTable();
-        productTable.setMatrix(1,4);
+        inputPanel = new InputPanel();
         constraints = new GridBagConstraintCustom();
-        columnNames = new ColumnNames();
+        columnNames = new TableRow(false,true);
         grandTotal = new GrandTotal();
         savePanel = new SavePanel();
         box = Box.createVerticalBox();
         box.add(table);
         scrollPane = new JScrollPane(box);
         setLayout(new GridBagLayout());
+
+        ColorFormatting();
 
         addInputPanel();
 
@@ -65,15 +79,21 @@ public class POSMain extends JFrame {
         mainPanelProperties();
     }
 
+    private void ColorFormatting() {
+        columnNames.setBackground(ColoringConstants.textFieldsBackground);
+        inputPanel.setForegroundColor(ColoringConstants.labelForeground_BLACK);
+        columnNames.setallForeground(Color.BLACK);
+    }
+
     private void tableRowActionPerformed() {
         table.setListener(new ActionPerformed() {
             @Override
-            public void actionPerformed() {
+            public void quantityUpdated() {
                 grandTotal.setTotal(table.getTotal());
             }
 
             @Override
-            public void actionCommand(String text) {
+            public void rowUpdated() {
 
             }
         });
@@ -102,17 +122,14 @@ public class POSMain extends JFrame {
         });
     }
 
-
-
     private void inputPanelListeners() {
 
-        // listens to press of the ADD_ITEM Button
+        // listens to press of the Button
         inputPanel.setListener(new ActionPerformed() {
             @Override
-            public void actionPerformed() {
+            public void quantityUpdated() {
 //
                 table.removeRow();
-
                 box.revalidate();
                 box.repaint();
                 scrollPane.revalidate();
@@ -121,7 +138,7 @@ public class POSMain extends JFrame {
             }
 
             @Override
-            public void actionCommand(String text) {
+            public void rowUpdated() {
 
             }
         });
@@ -136,7 +153,7 @@ public class POSMain extends JFrame {
                     table.updateRow(dbconn.rowData());
                     grandTotal.setTotal(table.getTotal());
 //                    table.requestFocus();
-                    inputPanel.requestFocus();
+//                    inputPanel.requestFocus();
                     box.revalidate();
                     box.repaint();
                     scrollPane.revalidate();
@@ -159,10 +176,20 @@ public class POSMain extends JFrame {
 
             }
         });
+
+        inputPanel.setCompleter(new AutoCompleter() {
+            @Override
+            public void autoCompleteQuery(String subString) {
+
+                try {
+                    dbconn.searchQuery(subString);
+                    inputPanel.populateSuggestions(dbconn.productNames());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-
-
-
 
     private void addProductTable() {
         constraints.gridy = 2;
@@ -278,10 +305,14 @@ public class POSMain extends JFrame {
         requestFocus();
     }
 
-
-
     private void tablePurge(){
-        table.removeAll();
+        box.remove(table);
+        table = new Table(false);
+        box.add(table);
+        box.repaint();
+        box.revalidate();
+        scrollPane.revalidate();
+        grandTotal.setTotal(0f);
         revalidate();
         repaint();
     }
